@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Language UniqueName="en" ReadableName="English">
+  <Translations>
+    <Translation ID="GBM_DESC" String="UNDER DEVELOPMENT: replaces vanilla garbage bins and enables customised placement." />
+    <Translation ID="GBM_OPT_PROP" String="Garbage bin" />
+    <Translation ID="GBM_OPT_DIST" String="Maximum distance to render bins (m)" />
+    <Translation ID="GBM_OPT_THLD" String="Show bins once building garbage count reaches (game default 1000)" />
+    <Translation ID="GBM_OPT_CAP" String="Amount of garbage each individual bin holds (before another bin is added - game default 1000)" />
+    <Translation ID="GBM_OPT_MAX" String="Maximum number of bins per building (game default 8)" />
+    <Translation ID="GBM_OPT_XPOS" String="Starting distance from side boundary (m)" />
+    <Translation ID="GBM_OPT_ZPOS" String="Forward offset of bins towards street (m)" />
+    <Translation ID="GBM_OPT_SPAC" String="Average space between bins (m)" />
+    <Translation ID="GBM_OPT_ROT" String="Randomly rotate bins" />
+    <Translation ID="GBM_OPT_RIGHT" String="Place bins from right-hand side of building (instead of left)" />
+    <Translation ID="GBM_OPT_NOGAME" String="Choose bin props when in-game" />
+    <Translation ID="GBM_PRP_RDM" String="Random" />
+    <Translation ID="TRN_CHOICE" String="Set language" />
+    <Translation ID="TRN_SYS" String="Use system language" />
+  </Translations>
+</Language>
