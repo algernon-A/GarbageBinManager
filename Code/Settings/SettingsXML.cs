@@ -15,6 +15,20 @@ namespace GarbageBinManager
         [XmlIgnore]
         private static readonly string SettingsFileName = "GarbageBinManager.xml";
 
+        // Global settings.
+        [XmlElement("Language")]
+        public string language
+        {
+            get
+            {
+                return Translations.Language;
+            }
+            set
+            {
+                Translations.Language = value;
+            }
+        }
+
         // List of individual setting elements.
         [XmlIgnore]
         public List<GBRSettingElement> elementList = new List<GBRSettingElement>();
@@ -23,7 +37,7 @@ namespace GarbageBinManager
         [XmlAttribute("Version")]
         public int version = 0;
 
-        // Global settings.
+        // Configuration settings.
         [XmlArray("Configurations", IsNullable = false)]
         [XmlArrayItem("Configuration", IsNullable = false)]
         public GBRSettingElement[] settingElements

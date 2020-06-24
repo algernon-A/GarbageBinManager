@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Language UniqueName="zh" ReadableName="中文">
+  <Translations>
+    <Translation ID="GBM_DESC" String="持續開發中： 替換遊戲默認垃圾桶為玩家自製" />
+    <Translation ID="GBM_OPT_PROP" String="垃圾桶" />
+    <Translation ID="GBM_OPT_DIST" String="渲染垃圾桶最大距離(米)" />
+    <Translation ID="GBM_OPT_THLD" String="建築達到一定垃圾積量則顯示垃圾桶(遊戲默認：1000)" />
+    <Translation ID="GBM_OPT_CAP" String="每個垃圾桶的垃圾容量(在添加其他垃圾桶前 - 遊戲默認：1000)" />
+    <Translation ID="GBM_OPT_MAX" String="每棟建築最大垃圾桶數量(遊戲默認：8)" />
+    <Translation ID="GBM_OPT_XPOS" String="距離邊界的起始距離(米)" />
+    <Translation ID="GBM_OPT_ZPOS" String="垃圾桶向街道的向前偏移(米)" />
+    <Translation ID="GBM_OPT_SPAC" String="垃圾桶之間的平均間隔(米)" />
+    <Translation ID="GBM_OPT_ROT" String="隨機旋轉垃圾桶" />
+    <Translation ID="GBM_OPT_RIGHT" String="從建築的右側放置垃圾桶(而不是左側)" />
+    <Translation ID="GBM_OPT_NOGAME" String="在遊戲中選擇垃圾桶道具" />
+    <Translation ID="GBM_PRP_RDM" String="隨機" />
+    <Translation ID="TRN_CHOICE" String="語言設置" />
+    <Translation ID="TRN_SYS" String="使用遊戲默認語言" />
+  </Translations>
+</Language>
