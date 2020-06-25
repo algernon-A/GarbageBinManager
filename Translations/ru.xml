@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Language UniqueName="ru" ReadableName="Русский">
+  <Translations>
+    <Translation ID="GBM_DESC" String="В РАЗРАБОТКЕ: заменяет ванильные мусорные баки и настраивает их размещение." />
+    <Translation ID="GBM_OPT_PROP" String="Мусорный бак" />
+    <Translation ID="GBM_OPT_DIST" String="Максимальное расстояние для рендеринга баков (м)" />
+    <Translation ID="GBM_OPT_THLD" String="Показать мусорные баки, как только количество мусора достигнет (game default 1000)" />
+    <Translation ID="GBM_OPT_CAP" String="Количество мусора, которое содержит каждый отдельный бак (до добавления другого бака) - game default 1000)" />
+    <Translation ID="GBM_OPT_MAX" String="Максимальное количество баков на здание (game default 8)" />
+    <Translation ID="GBM_OPT_XPOS" String="Начальное расстояние от участка здания (м)" />
+    <Translation ID="GBM_OPT_ZPOS" String="Смещение бункеров в сторону улицы (м)" />
+    <Translation ID="GBM_OPT_SPAC" String="Среднее расстояние между баками (м)" />
+    <Translation ID="GBM_OPT_ROT" String="Случайно вращать баки" />
+    <Translation ID="GBM_OPT_RIGHT" String="Поместить баки с правой стороны здания (вместо левой)" />
+    <Translation ID="GBM_OPT_NOGAME" String="Выбор баков будет доступен после загрузки карты" />
+    <Translation ID="GBM_PRP_RDM" String="Случайно" />
+    <Translation ID="TRN_CHOICE" String="Установить язык" />
+    <Translation ID="TRN_SYS" String="Использ. системный" />
+  </Translations>
+</Language>

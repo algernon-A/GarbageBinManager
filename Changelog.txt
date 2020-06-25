@@ -1,1 +1,2 @@
-﻿- Add zh translation by M.S.Referee
+﻿- Add ru translation by vitalii201
+- Add zh translation by M.S.Referee
