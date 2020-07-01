@@ -37,7 +37,7 @@ namespace GarbageBinManager
         /// <summary>
         /// Creates the panel object in-game and displays it.
         /// </summary>
-        internal static void Create()
+        private static void Create()
         {
             try
             {
@@ -64,7 +64,7 @@ namespace GarbageBinManager
         /// <summary>
         /// Closes the panel by destroying the object (removing any ongoing UI overhead).
         /// </summary>
-        internal static void Close()
+        private static void Close()
         {
             // Save settings first.
             GBMSettingsFile.SaveSettings();
@@ -112,6 +112,7 @@ namespace GarbageBinManager
                     }
                 };
 
+                // Recreate panel on system locale change.
                 LocaleManager.eventLocaleChanged += LocaleChanged;
             }
         }

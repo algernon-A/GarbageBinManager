@@ -48,7 +48,7 @@ namespace GarbageBinManager
         internal static void SetCurrentBin()
         {
             // Ensure a name is set and that it corresponds to a loaded bin.
-            if (currentBin != null && binList.ContainsKey(currentBinName))
+            if (currentBinName != null && binList.ContainsKey(currentBinName))
             {
                 currentBin = binList[currentBinName];
             }
