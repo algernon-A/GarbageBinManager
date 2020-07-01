@@ -1,4 +1,6 @@
-﻿- Add explicit recognition for twelve workshop bins (Germany, UK, Korea, generic)
+﻿Version 0.2 -
+
+- Add explicit recognition for twelve workshop bins (Germany, UK, Korea, generic)
 - Add ru translation by vitalii201
 - Add zh translation by M.S.Referee
 - Update translation framework
