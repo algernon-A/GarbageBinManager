@@ -64,9 +64,9 @@ namespace GarbageBinManager
             }
 
             // Set current bin.
-            ModSettings.currentBin = ModSettings.binList[ModSettings.currentBinName];
+            ModSettings.SetCurrentBin();
 
-            // Set up options panel event handler.
+            // Set up options panel event handler (need to redo this now that options panel has been reset after loading into game).
             OptionsPanelManager.OptionsEventHook();
         }
     }

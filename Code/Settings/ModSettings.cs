@@ -43,6 +43,19 @@ namespace GarbageBinManager
 
 
         /// <summary>
+        /// Sets the current bin based on the name in currentBinName.
+        /// </summary>
+        internal static void SetCurrentBin()
+        {
+            // Ensure a name is set and that it corresponds to a loaded bin.
+            if (currentBin != null && binList.ContainsKey(currentBinName))
+            {
+                currentBin = binList[currentBinName];
+            }
+        }
+
+
+        /// <summary>
         /// Returns the name of a prefab cleaned up for display.
         /// </summary>
         /// <param name="fullName">Raw prefab name</param>

@@ -2,6 +2,7 @@
 using UnityEngine;
 using ICities;
 using ColossalFramework.UI;
+using ColossalFramework.Globalization;
 
 
 namespace GarbageBinManager
@@ -16,15 +17,13 @@ namespace GarbageBinManager
         private static GBMOptionsPanel _panel;
         internal static GBMOptionsPanel Panel => _panel;
 
-        // Settings file.
-        //internal static SettingsFile settings;
-
         // Parent UI panel reference.
         private static UIScrollablePanel optionsPanel;
+        private static UIPanel gameOptionsPanel;
 
 
         /// <summary>
-        /// Options panel constructor.
+        /// Options panel setup.
         /// </summary>
         /// <param name="helper">UIHelperBase parent</param>
         internal static void Setup(UIHelperBase helper)
@@ -70,8 +69,18 @@ namespace GarbageBinManager
             // Save settings first.
             GBMSettingsFile.SaveSettings();
 
-            GameObject.Destroy(_panel);
-            GameObject.Destroy(uiGameObject);
+            // Enforce C# garbage collection by setting to null.
+            if (_panel != null)
+            {
+                GameObject.Destroy(_panel);
+                _panel = null;
+            }
+
+            if (uiGameObject != null)
+            {
+                GameObject.Destroy(uiGameObject);
+                uiGameObject = null;
+            }
         }
 
 
@@ -82,7 +91,7 @@ namespace GarbageBinManager
         internal static void OptionsEventHook()
         {
             // Get options panel instance.
-            UIPanel gameOptionsPanel = UIView.library.Get<UIPanel>("OptionsPanel");
+            gameOptionsPanel = UIView.library.Get<UIPanel>("OptionsPanel");
 
             if (gameOptionsPanel == null)
             {
@@ -102,6 +111,21 @@ namespace GarbageBinManager
                         Close();
                     }
                 };
+
+                LocaleManager.eventLocaleChanged += LocaleChanged;
+            }
+        }
+
+
+        /// <summary>
+        /// Refreshes the options panel (destroys and rebuilds) on a locale change when the options panel is open.
+        /// </summary>
+        public static void LocaleChanged()
+        {
+            if (gameOptionsPanel != null && gameOptionsPanel.isVisible)
+            {
+                Close();
+                Create();
             }
         }
     }
