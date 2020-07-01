@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ICities;
 
 
@@ -16,32 +17,54 @@ namespace GarbageBinManager
         public override void OnLevelLoaded(LoadMode mode)
         {
             // Initialise our list of valid bin replacement props.
-            ModSettings.propList = new SortedList<string, PropInfo>();
+            ModSettings.binList = new SortedList<string, BinRecord>();
 
             // Add intial 'random' item.
-            ModSettings.propList.Add("000." + Translations.Translate("GBM_PRP_RDM"), null);
+            ModSettings.binList.Add("000." + Translations.Translate("GBM_PRP_RDM"), null);
 
             // Iterate through all loaded props, looking for props that meet our requirements.
             int propCount = PrefabCollection<PropInfo>.LoadedCount();
             for (uint i = 0; i < propCount; ++ i)
             {
                 PropInfo thisProp = PrefabCollection<PropInfo>.GetLoaded(i);
-                
-                // Requirements are non-null, valid name, 'garbage' service, automatic (not manual) placement, and not requiring a height map
-                if (thisProp != null && thisProp.name != null && thisProp.GetService() == ItemClass.Service.Garbage && thisProp.m_placementStyle == ItemClass.Placement.Automatic && !thisProp.m_requireHeightMap)
+
+                // Check for valid prop, and that it doesn't require a height map.
+                if (thisProp?.name != null && !thisProp.m_requireHeightMap)
                 {
+                    float rotation;
+
+                    // Does this meet our automatic criteria ('garbage' service and automatic (not manual) placement)?
+                    if (thisProp.GetService() == ItemClass.Service.Garbage && thisProp.m_placementStyle == ItemClass.Placement.Automatic)
+                    {
+                        // Default roation is 180 degrees (in Radians!) to suit Arnold J. Rimmer, Bsc. Ssc.'s wheelie bins (front to curb). 
+                        rotation = (float)Math.PI;
+                    }
+                    // Otherwise, is it one of our custom ones?
+                    else if (CustomBins.binList.ContainsKey(thisProp.name))
+                    {
+                        rotation = CustomBins.binList[thisProp.name];
+                    }
+                    else
+                    {
+                        // No match; carry on!
+                        continue;
+                    }
+
                     // Check to make sure we don't have a duplicate here.
-                    if (ModSettings.propList.ContainsKey(thisProp.name))
+                    if (ModSettings.binList.ContainsKey(thisProp.name))
                     {
                         Debugging.Message("duplicate prop name " + thisProp.name);
                     }
                     else
                     {
                         // All good - add to list.
-                        ModSettings.propList.Add(thisProp.name, thisProp);
+                        ModSettings.binList.Add(thisProp.name, new BinRecord { binProp = thisProp, rotation = rotation });
                     }
                 }
             }
+
+            // Set current bin.
+            ModSettings.currentBin = ModSettings.binList[ModSettings.currentBinName];
 
             // Set up options panel event handler.
             OptionsPanelManager.OptionsEventHook();

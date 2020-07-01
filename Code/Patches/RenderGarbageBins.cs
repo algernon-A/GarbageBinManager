@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
-using ColossalFramework;
 using ColossalFramework.Math;
 using HarmonyLib;
 using System;
+
 
 namespace GarbageBinManager
 {
@@ -43,7 +43,8 @@ namespace GarbageBinManager
 			Randomizer randomizer = new Randomizer(buildingID);
 
 			// Get bin from settings (random one with 'garbage' service if none selected).
-			PropInfo renderProp = ModSettings.currentBin ?? ModSettings.GetRandomProp(randomizer);
+			BinRecord renderBin = ModSettings.currentBin ?? ModSettings.GetRandomBin(randomizer);
+			PropInfo renderProp = renderBin.binProp;
 
 			// If no prop returned, or prop prefab data layer doesn't match the current one, return.
 			if (renderProp == null || (layerMask & (1 << renderProp.m_prefabDataLayer)) == 0)
@@ -78,7 +79,7 @@ namespace GarbageBinManager
 				else
 				{
 					// Default angle is building angle; rotate by 180 degrees (in Radians!) to suit Arnold J. Rimmer, Bsc. Ssc.'s wheelie bins (front to curb). 
-					angle = data.m_angle + (float)Math.PI;
+					angle = data.m_angle + renderBin.rotation;
 				}
 
 				// X is across building width.  Start at front left corner (width * 4, 8m per square and we want half that) and inset by our set X offset.

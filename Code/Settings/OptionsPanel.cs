@@ -2,9 +2,7 @@
 using UnityEngine;
 using ICities;
 using ColossalFramework.UI;
-using System.Linq;
-using ColossalFramework.PlatformServices;
-using HarmonyLib;
+
 
 namespace GarbageBinManager
 {
@@ -129,7 +127,7 @@ namespace GarbageBinManager
             Debugging.Message("creating options panel");
 
             // Prop selection.
-            if (ModSettings.propList == null)
+            if (ModSettings.binList == null)
             {
                 // If the dictionary hasn't been initialised yet, then we're not in-game; display message instead.
                 UILabel noPropLabel = this.AddUIComponent<UILabel>();
@@ -144,12 +142,12 @@ namespace GarbageBinManager
             else
             {
                 // We have a dictionary (game has loaded); create dropdown, populate with our prop list, and add 'Random' to the end.
-                UIDropDown propSelection = PanelUtils.AddPlainDropDown(this, Translations.Translate("GBM_OPT_PROP"), ModSettings.DisplayPropList, ModSettings.propList.IndexOfValue(ModSettings.currentBin));
+                UIDropDown propSelection = PanelUtils.AddPlainDropDown(this, Translations.Translate("GBM_OPT_PROP"), ModSettings.DisplayPropList, ModSettings.binList.IndexOfValue(ModSettings.currentBin));
 
                 // Event handler.
                 propSelection.eventSelectedIndexChanged += (control, index) =>
                 {
-                    ModSettings.currentBin = ModSettings.propList.Values[index];
+                    ModSettings.currentBin = ModSettings.binList.Values[index];
                 };
             }
 
