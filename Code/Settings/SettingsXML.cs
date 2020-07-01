@@ -49,7 +49,7 @@ namespace GarbageBinManager
 
                 newElements[0] = new GBRSettingElement() {
                     prefab = "global",
-                    propName = ModSettings.currentBin?.binProp?.name ?? "random",
+                    propName = ModSettings.currentBin?.binProp?.name ?? ModSettings.currentBinName ?? "random",
                     renderRange = ModSettings.renderRange,
                     binThreshold = ModSettings.binThreshold,
                     binCapacity = ModSettings.binCapacity,
