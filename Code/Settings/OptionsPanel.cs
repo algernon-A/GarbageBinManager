@@ -151,6 +151,12 @@ namespace GarbageBinManager
             // Add controls.
             Debugging.Message("creating options panel");
 
+            // Checkbox to hide all bins.
+            UICheckBox hideCheck = PanelUtils.AddPlainCheckBox(this, Translations.Translate("GBM_OPT_HIDE"));
+            hideCheck.isChecked = ModSettings.hideBins;
+            hideCheck.eventCheckChanged += (control, isChecked) => { ModSettings.hideBins = isChecked; };
+            PanelUtils.AddPanelSpacer(this);
+
             // Prop selection.
             if (ModSettings.binList == null)
             {

@@ -11,6 +11,9 @@ namespace GarbageBinManager
     /// </summary>
     public static class ModSettings
     {
+        // Main toggle.
+        public static bool hideBins = false;
+
         // Defaults from game.
         public static float renderRange = 500f;
         public static float binThreshold = 1000f;

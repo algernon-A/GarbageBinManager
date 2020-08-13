@@ -24,8 +24,8 @@ namespace GarbageBinManager
 		/// <param name="instance">RenderManager instance</param>
 		public static bool Prefix(CommonBuildingAI __instance, RenderManager.CameraInfo cameraInfo, ushort buildingID, ref Building data, int layerMask, ref RenderManager.Instance instance)
 		{
-			// Don't do anything if building's garbage buffer is below set threshold (vanilla threshold: 1,000).
-			if (data.m_garbageBuffer < ModSettings.binThreshold)
+			// Don't do anything if building's garbage buffer is below set threshold (vanilla threshold: 1,000), or if hide all bins is checked..
+			if (ModSettings.hideBins || data.m_garbageBuffer < ModSettings.binThreshold)
 			{
 				// Don't continue on to original method.
 				return false;

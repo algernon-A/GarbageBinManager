@@ -1,4 +1,7 @@
-﻿Version 0.2 -
+﻿- Add option to hide all garbage bins.
+
+
+Version 0.2 -
 
 - Add explicit recognition for twelve workshop bins (Germany, UK, Korea, generic)
 - Add ru translation by vitalii201

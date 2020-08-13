@@ -49,6 +49,7 @@ namespace GarbageBinManager
 
                 newElements[0] = new GBRSettingElement() {
                     prefab = "global",
+                    hideBins = ModSettings.hideBins,
                     propName = ModSettings.currentBin?.binProp?.name ?? ModSettings.currentBinName ?? "random",
                     renderRange = ModSettings.renderRange,
                     binThreshold = ModSettings.binThreshold,
@@ -71,6 +72,7 @@ namespace GarbageBinManager
                 {
                     if (element.prefab == "global")
                     {
+                        ModSettings.hideBins = element.hideBins;
                         ModSettings.currentBinName = element.propName;
                         ModSettings.renderRange = element.renderRange;
                         ModSettings.binThreshold = element.binThreshold;
@@ -150,6 +152,9 @@ namespace GarbageBinManager
     {
         [XmlAttribute("Prefab")]
         public string prefab = string.Empty;
+
+        [XmlElement("HideBins")]
+        public bool hideBins = false;
 
         [XmlElement("PropName")]
         public string propName = string.Empty;
