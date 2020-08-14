@@ -2,6 +2,7 @@
 <Language UniqueName="en" ReadableName="English">
   <Translations>
     <Translation ID="GBM_DESC" String="UNDER DEVELOPMENT: replaces vanilla garbage bins and enables customised placement." />
+    <Translation ID="GBM_OPT_HIDE" String="Hide all bins" />
     <Translation ID="GBM_OPT_PROP" String="Garbage bin" />
     <Translation ID="GBM_OPT_DIST" String="Maximum distance to render bins (m)" />
     <Translation ID="GBM_OPT_THLD" String="Show bins once building garbage count reaches (game default 1000)" />

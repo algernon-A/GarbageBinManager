@@ -137,6 +137,21 @@ namespace GarbageBinManager
     /// </summary>
     public class GBMOptionsPanel : UIPanel
     {
+        // Panel components.
+        private UIDropDown propSelection;
+        private UILabel noPropLabel;
+        private UISlider rangeSlider;
+        private UISlider thresholdSlider;
+        private UISlider capacitySlider;
+        private UISlider maxSlider;
+        private UISlider xPosSlider;
+        private UISlider zPosSlider;
+        private UISlider spaceSlider;
+        private UICheckBox rotationCheck;
+        private UICheckBox fromRightCheck;
+        private UICheckBox hideCheck;
+
+
         /// <summary>
         /// Performs initial setup for the panel; we don't use Start() as that's not sufficiently reliable (race conditions), and is not needed with the dynamic create/destroy process.
         /// </summary>
@@ -152,16 +167,16 @@ namespace GarbageBinManager
             Debugging.Message("creating options panel");
 
             // Checkbox to hide all bins.
-            UICheckBox hideCheck = PanelUtils.AddPlainCheckBox(this, Translations.Translate("GBM_OPT_HIDE"));
+            hideCheck = PanelUtils.AddPlainCheckBox(this, Translations.Translate("GBM_OPT_HIDE"));
             hideCheck.isChecked = ModSettings.hideBins;
-            hideCheck.eventCheckChanged += (control, isChecked) => { ModSettings.hideBins = isChecked; };
+            hideCheck.eventCheckChanged += (control, isChecked) => { ModSettings.hideBins = isChecked; UpdateVisibility();  };
             PanelUtils.AddPanelSpacer(this);
 
             // Prop selection.
             if (ModSettings.binList == null)
             {
                 // If the dictionary hasn't been initialised yet, then we're not in-game; display message instead.
-                UILabel noPropLabel = this.AddUIComponent<UILabel>();
+                noPropLabel = this.AddUIComponent<UILabel>();
 
                 noPropLabel.textScale = 1.2f;
                 noPropLabel.text = Translations.Translate("GBM_OPT_NOGAME");
@@ -173,7 +188,7 @@ namespace GarbageBinManager
             else
             {
                 // We have a dictionary (game has loaded); create dropdown, populate with our prop list, and add 'Random' to the end.
-                UIDropDown propSelection = PanelUtils.AddPlainDropDown(this, Translations.Translate("GBM_OPT_PROP"), ModSettings.DisplayPropList, ModSettings.binList.IndexOfValue(ModSettings.currentBin));
+                propSelection = PanelUtils.AddPlainDropDown(this, Translations.Translate("GBM_OPT_PROP"), ModSettings.DisplayPropList, ModSettings.binList.IndexOfValue(ModSettings.currentBin));
 
                 // Event handler.
                 propSelection.eventSelectedIndexChanged += (control, index) =>
@@ -183,21 +198,21 @@ namespace GarbageBinManager
             }
 
             // Sliders for render range, spacing between bins, and forward offset of bins.
-            UISlider rangeSlider = PanelUtils.AddSliderWithValue(this, Translations.Translate("GBM_OPT_DIST"), 100f, 1000f, 10f, ModSettings.renderRange, (value) => { ModSettings.renderRange = value; });
-            UISlider thresholdSlider = PanelUtils.AddSliderWithValue(this, Translations.Translate("GBM_OPT_THLD"), 0f, 2000f, 100f, ModSettings.binThreshold, (value) => { ModSettings.binThreshold = value; });
-            UISlider capacitySlider = PanelUtils.AddSliderWithValue(this, Translations.Translate("GBM_OPT_CAP"), 100f, 2000f, 100f, ModSettings.binCapacity, (value) => { ModSettings.binCapacity = value; });
-            UISlider maxSlider = PanelUtils.AddSliderWithValue(this, Translations.Translate("GBM_OPT_MAX"), 1f, 50, 1f, ModSettings.maxBins, (value) => { ModSettings.maxBins = (int)value; });
-            UISlider xPosSlider = PanelUtils.AddSliderWithValue(this, Translations.Translate("GBM_OPT_XPOS"), 0f, 6f, 0.1f, ModSettings.binXOffset, (value) => { ModSettings.binXOffset = value; });
-            UISlider zPosSlider = PanelUtils.AddSliderWithValue(this, Translations.Translate("GBM_OPT_ZPOS"), 0f, 6f, 0.1f, ModSettings.binZOffset, (value) => { ModSettings.binZOffset = value; });
-            UISlider spaceSlider = PanelUtils.AddSliderWithValue(this, Translations.Translate("GBM_OPT_SPAC"), 0.4f, 4f, 0.1f, ModSettings.binSpacing, (value) => { ModSettings.binSpacing = value; });
+            rangeSlider = PanelUtils.AddSliderWithValue(this, Translations.Translate("GBM_OPT_DIST"), 100f, 1000f, 10f, ModSettings.renderRange, (value) => { ModSettings.renderRange = value; });
+            thresholdSlider = PanelUtils.AddSliderWithValue(this, Translations.Translate("GBM_OPT_THLD"), 0f, 2000f, 100f, ModSettings.binThreshold, (value) => { ModSettings.binThreshold = value; });
+            capacitySlider = PanelUtils.AddSliderWithValue(this, Translations.Translate("GBM_OPT_CAP"), 100f, 2000f, 100f, ModSettings.binCapacity, (value) => { ModSettings.binCapacity = value; });
+            maxSlider = PanelUtils.AddSliderWithValue(this, Translations.Translate("GBM_OPT_MAX"), 1f, 50, 1f, ModSettings.maxBins, (value) => { ModSettings.maxBins = (int)value; });
+            xPosSlider = PanelUtils.AddSliderWithValue(this, Translations.Translate("GBM_OPT_XPOS"), 0f, 6f, 0.1f, ModSettings.binXOffset, (value) => { ModSettings.binXOffset = value; });
+            zPosSlider = PanelUtils.AddSliderWithValue(this, Translations.Translate("GBM_OPT_ZPOS"), 0f, 6f, 0.1f, ModSettings.binZOffset, (value) => { ModSettings.binZOffset = value; });
+            spaceSlider = PanelUtils.AddSliderWithValue(this, Translations.Translate("GBM_OPT_SPAC"), 0.4f, 4f, 0.1f, ModSettings.binSpacing, (value) => { ModSettings.binSpacing = value; });
 
             // Random rotation checkbox.
-            UICheckBox rotationCheck = PanelUtils.AddPlainCheckBox(this, Translations.Translate("GBM_OPT_ROT"));
+            rotationCheck = PanelUtils.AddPlainCheckBox(this, Translations.Translate("GBM_OPT_ROT"));
             rotationCheck.isChecked = ModSettings.randomRot;
             rotationCheck.eventCheckChanged += (control, isChecked) => { ModSettings.randomRot = isChecked; };
 
             // Put out bins from right corner instead of left.
-            UICheckBox fromRightCheck = PanelUtils.AddPlainCheckBox(this, Translations.Translate("GBM_OPT_RIGHT"));
+            fromRightCheck = PanelUtils.AddPlainCheckBox(this, Translations.Translate("GBM_OPT_RIGHT"));
             fromRightCheck.isChecked = ModSettings.fromRight;
             fromRightCheck.eventCheckChanged += (control, isChecked) => { ModSettings.fromRight = isChecked; };
 
@@ -210,6 +225,40 @@ namespace GarbageBinManager
             {
                 Translations.Index = index;
             };
+
+            // Update visibility.
+            UpdateVisibility();
+        }
+
+
+        /// <summary>
+        /// Shows or hides controls based on state of 'hide bins' checkbox.
+        /// </summary>
+        private void UpdateVisibility()
+        {
+            // Get local reference.
+            bool shown = !hideCheck.isChecked;
+
+            // Set visibility.
+            rangeSlider.parent.isVisible = shown;
+            thresholdSlider.parent.isVisible = shown;
+            capacitySlider.parent.isVisible = shown;
+            maxSlider.parent.isVisible = shown;
+            xPosSlider.parent.isVisible = shown;
+            zPosSlider.parent.isVisible = shown;
+            spaceSlider.parent.isVisible = shown;
+            rotationCheck.isVisible = shown;
+            fromRightCheck.isVisible = shown;
+
+            // Dropdown box or in-game only label - these may or may not exist, so need explicit null checks.
+            if (noPropLabel != null)
+            {
+                noPropLabel.isVisible = shown;
+            }
+            if (propSelection != null)
+            {
+                propSelection.parent.isVisible = shown;
+            }
         }
     }
 }
