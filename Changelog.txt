@@ -1,4 +1,6 @@
-﻿- Add option to hide all garbage bins.
+﻿Version 0.3 -
+
+- Add option to hide all garbage bins.
 
 
 Version 0.2 -
