@@ -2,10 +2,11 @@
 <Language UniqueName="ru" ReadableName="Русский">
   <Translations>
     <Translation ID="GBM_DESC" String="В РАЗРАБОТКЕ: заменяет ванильные мусорные баки и настраивает их размещение." />
+    <Translation ID="GBM_OPT_HIDE" String="Скрыть все баки" />
     <Translation ID="GBM_OPT_PROP" String="Мусорный бак" />
     <Translation ID="GBM_OPT_DIST" String="Максимальное расстояние для рендеринга баков (м)" />
     <Translation ID="GBM_OPT_THLD" String="Показать мусорные баки, как только количество мусора достигнет (game default 1000)" />
-    <Translation ID="GBM_OPT_CAP" String="Количество мусора, которое содержит каждый отдельный бак (до добавления другого бака) - game default 1000)" />
+    <Translation ID="GBM_OPT_CAP" String="Количество мусора, которое содержит каждый отдельный бак (до добавления другого бака) - game default 1000" />
     <Translation ID="GBM_OPT_MAX" String="Максимальное количество баков на здание (game default 8)" />
     <Translation ID="GBM_OPT_XPOS" String="Начальное расстояние от участка здания (м)" />
     <Translation ID="GBM_OPT_ZPOS" String="Смещение бункеров в сторону улицы (м)" />
