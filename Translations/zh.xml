@@ -2,6 +2,7 @@
 <Language UniqueName="zh" ReadableName="中文">
   <Translations>
     <Translation ID="GBM_DESC" String="持續開發中： 替換遊戲默認垃圾桶為玩家自製" />
+    <Translation ID="GBM_OPT_HIDE" String="隱藏所有垃圾桶" />
     <Translation ID="GBM_OPT_PROP" String="垃圾桶" />
     <Translation ID="GBM_OPT_DIST" String="渲染垃圾桶最大距離(米)" />
     <Translation ID="GBM_OPT_THLD" String="建築達到一定垃圾積量則顯示垃圾桶(遊戲默認：1000)" />
