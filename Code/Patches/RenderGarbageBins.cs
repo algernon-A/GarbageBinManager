@@ -16,13 +16,12 @@ namespace GarbageBinManager
 		/// <summary>
 		/// Harmony Prefix patch to replace garbage bins.
 		/// </summary>
-		/// <param name="__instance">Instance reference</param>
 		/// <param name="cameraInfo">Current camera info</param>
 		/// <param name="buildingID">Building instance ID</param>
 		/// <param name="data">Building data</param>
 		/// <param name="layerMask">Layer mask</param>
 		/// <param name="instance">RenderManager instance</param>
-		public static bool Prefix(CommonBuildingAI __instance, RenderManager.CameraInfo cameraInfo, ushort buildingID, ref Building data, int layerMask, ref RenderManager.Instance instance)
+		public static bool Prefix(RenderManager.CameraInfo cameraInfo, ushort buildingID, ref Building data, int layerMask, ref RenderManager.Instance instance)
 		{
 			// Don't do anything if building's garbage buffer is below set threshold (vanilla threshold: 1,000), or if hide all bins is checked..
 			if (ModSettings.hideBins || data.m_garbageBuffer < ModSettings.binThreshold)
@@ -57,7 +56,7 @@ namespace GarbageBinManager
 			int numBins = Mathf.Min(ModSettings.maxBins, (int)(data.m_garbageBuffer / ModSettings.binCapacity));
 
 			// Prop position vector.
-			Vector3 vector = default(Vector3);
+			Vector3 vector = default;
 
 			// Set up each bin.
 			for (int i = 0; i < numBins; ++i)
@@ -103,7 +102,7 @@ namespace GarbageBinManager
 
 				// Setup - note four-component vector with values from game code.
 				Vector4 objectIndex = new Vector4(0.001953125f, 0.00260416674f, 0f, 0f);
-				InstanceID id = default(InstanceID);
+				InstanceID id = default;
 				id.Building = buildingID;
 
 				// Render the prop.

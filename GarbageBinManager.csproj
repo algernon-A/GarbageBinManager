@@ -57,7 +57,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Code\Debugging.cs" />
     <Compile Include="Code\Mod.cs" />
     <Compile Include="Code\Patches\Patcher.cs" />
     <Compile Include="Code\Patches\RenderGarbageBins.cs" />
@@ -67,6 +66,8 @@
     <Compile Include="Code\Settings\SettingsXML.cs" />
     <Compile Include="Code\TranslationFramework\TranslationFramework.cs" />
     <Compile Include="Code\TranslationFramework\TranslationXML.cs" />
+    <Compile Include="Code\Utils\Logging.cs" />
+    <Compile Include="Code\Utils\ModUtils.cs" />
     <Compile Include="Loading.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

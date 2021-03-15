@@ -17,7 +17,7 @@ namespace GarbageBinManager
 
         // Global settings.
         [XmlElement("Language")]
-        public string language
+        public string Language
         {
             get
             {
@@ -40,7 +40,7 @@ namespace GarbageBinManager
         // Configuration settings.
         [XmlArray("Configurations", IsNullable = false)]
         [XmlArrayItem("Configuration", IsNullable = false)]
-        public GBRSettingElement[] settingElements
+        public GBRSettingElement[] SettingElements
         {
             // Write to XML.
             get
@@ -105,19 +105,18 @@ namespace GarbageBinManager
                         XmlSerializer xmlSerializer = new XmlSerializer(typeof(GBMSettingsFile));
                         if (!(xmlSerializer.Deserialize(reader) is GBMSettingsFile gbrSettingsFile))
                         {
-                            Debugging.Message("couldn't deserialize settings file");
+                            Logging.Error("couldn't deserialize settings file");
                         }
                     }
                 }
                 else
                 {
-                    Debugging.Message("no settings file found");
+                    Logging.Message("no settings file found");
                 }
             }
             catch (Exception e)
             {
-                Debugging.Message("exception reading XML settings file");
-                Debugging.LogException(e);
+                Logging.LogException(e, "exception reading XML settings file");
             }
         }
 
@@ -138,8 +137,7 @@ namespace GarbageBinManager
             }
             catch (Exception e)
             {
-                Debugging.Message("exception saving XML settings file");
-                Debugging.LogException(e);
+                Logging.LogException(e, "exception saving XML settings file");
             }
         }
     }

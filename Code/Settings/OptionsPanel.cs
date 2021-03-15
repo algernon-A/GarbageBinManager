@@ -56,7 +56,7 @@ namespace GarbageBinManager
             }
             catch (Exception e)
             {
-                Debugging.LogException(e);
+                Logging.LogException(e, "exception creating options panel");
             }
         }
 
@@ -95,7 +95,7 @@ namespace GarbageBinManager
 
             if (gameOptionsPanel == null)
             {
-                Debugging.Message("couldn't find OptionsPanel");
+                Logging.Error("couldn't find OptionsPanel");
             }
             else
             {
@@ -164,8 +164,6 @@ namespace GarbageBinManager
             this.autoLayoutDirection = LayoutDirection.Vertical;
 
             // Add controls.
-            Debugging.Message("creating options panel");
-
             // Checkbox to hide all bins.
             hideCheck = PanelUtils.AddPlainCheckBox(this, Translations.Translate("GBM_OPT_HIDE"));
             hideCheck.isChecked = ModSettings.hideBins;

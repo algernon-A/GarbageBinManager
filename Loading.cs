@@ -16,11 +16,11 @@ namespace GarbageBinManager
         /// <param name="mode">Loading mode (e.g. game, editor, scenario, etc.)</param>
         public override void OnLevelLoaded(LoadMode mode)
         {
-            // Initialise our list of valid bin replacement props.
-            ModSettings.binList = new SortedList<string, BinRecord>();
-
-            // Add intial 'random' item.
-            ModSettings.binList.Add("000." + Translations.Translate("GBM_PRP_RDM"), null);
+            // Initialise our list of valid bin replacement props with intial 'random' item..
+            ModSettings.binList = new SortedList<string, BinRecord>
+            {
+                { "000." + Translations.Translate("GBM_PRP_RDM"), null }
+            };
 
             // Iterate through all loaded props, looking for props that meet our requirements.
             int propCount = PrefabCollection<PropInfo>.LoadedCount();
@@ -53,7 +53,7 @@ namespace GarbageBinManager
                     // Check to make sure we don't have a duplicate here.
                     if (ModSettings.binList.ContainsKey(thisProp.name))
                     {
-                        Debugging.Message("duplicate prop name " + thisProp.name);
+                        Logging.Message("duplicate prop name ", thisProp.name);
                     }
                     else
                     {
