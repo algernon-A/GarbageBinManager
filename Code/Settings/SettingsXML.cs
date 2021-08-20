@@ -9,7 +9,7 @@ namespace GarbageBinManager
     /// <summary>
     /// XML settings file.
     /// </summary>
-    [XmlRoot(ElementName = "GarbageBinRemover", Namespace = "", IsNullable = false)]
+    [XmlRoot(ElementName = "GarbageBinRemover", Namespace = "")]
     public class GBMSettingsFile
     {
         [XmlIgnore]
@@ -38,8 +38,8 @@ namespace GarbageBinManager
         public int version = 0;
 
         // Configuration settings.
-        [XmlArray("Configurations", IsNullable = false)]
-        [XmlArrayItem("Configuration", IsNullable = false)]
+        [XmlArray("Configurations")]
+        [XmlArrayItem("Configuration")]
         public GBRSettingElement[] SettingElements
         {
             // Write to XML.
