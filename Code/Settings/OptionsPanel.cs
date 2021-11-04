@@ -67,7 +67,7 @@ namespace GarbageBinManager
         private static void Close()
         {
             // Save settings first.
-            GBMSettingsFile.SaveSettings();
+            ModSettings.Save();
 
             // Enforce C# garbage collection by setting to null.
             if (_panel != null)
@@ -171,7 +171,7 @@ namespace GarbageBinManager
             PanelUtils.AddPanelSpacer(this);
 
             // Prop selection.
-            if (ModSettings.binList == null)
+            if (BinUtils.binList == null)
             {
                 // If the dictionary hasn't been initialised yet, then we're not in-game; display message instead.
                 noPropLabel = this.AddUIComponent<UILabel>();
@@ -186,12 +186,12 @@ namespace GarbageBinManager
             else
             {
                 // We have a dictionary (game has loaded); create dropdown, populate with our prop list, and add 'Random' to the end.
-                propSelection = PanelUtils.AddPlainDropDown(this, Translations.Translate("GBM_OPT_PROP"), ModSettings.DisplayPropList, ModSettings.binList.IndexOfValue(ModSettings.currentBin));
+                propSelection = PanelUtils.AddPlainDropDown(this, Translations.Translate("GBM_OPT_PROP"), BinUtils.DisplayPropList, BinUtils.binList.IndexOfValue(BinUtils.currentBin));
 
                 // Event handler.
                 propSelection.eventSelectedIndexChanged += (control, index) =>
                 {
-                    ModSettings.currentBin = ModSettings.binList.Values[index];
+                    BinUtils.currentBin = BinUtils.binList.Values[index];
                 };
             }
 

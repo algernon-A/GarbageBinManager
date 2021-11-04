@@ -42,7 +42,7 @@ namespace GarbageBinManager
 			Randomizer randomizer = new Randomizer(buildingID);
 
 			// Get bin from settings (random one with 'garbage' service if none selected).
-			BinRecord renderBin = ModSettings.currentBin ?? ModSettings.GetRandomBin(randomizer);
+			BinRecord renderBin = BinUtils.currentBin ?? BinUtils.GetRandomBin(randomizer);
 			PropInfo renderProp = renderBin.binProp;
 
 			// If no prop returned, or prop prefab data layer doesn't match the current one, return.

@@ -1,106 +1,215 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using ColossalFramework.Math;
+using System.Xml.Serialization;
 
 
 namespace GarbageBinManager
 {
     /// <summary>
-    /// Static class to hold global mod settings.
+    /// Class to hold global mod settings.
     /// </summary>
-    public static class ModSettings
+    [XmlRoot(ElementName = "GarbageBinRemover", Namespace = "")]
+    public class ModSettings
     {
         // Main toggle.
-        public static bool hideBins = false;
+        [XmlIgnore]
+        internal static bool hideBins = false;
 
         // Defaults from game.
-        public static float renderRange = 500f;
-        public static float binThreshold = 1000f;
-        public static float binCapacity = 1000f;
-        public static int maxBins = 8;
+        [XmlIgnore]
+        internal static float renderRange = 500f;
+        [XmlIgnore]
+        internal static float binThreshold = 1000f;
+        [XmlIgnore]
+        internal static float binCapacity = 1000f;
+        [XmlIgnore]
+        internal static int maxBins = 8;
 
         // Reasonable defaults to work with to suit Arnold J. Rimmer, Bsc. Ssc.'s bins.
-        public static float binXOffset = 0.4f;
-        public static float binZOffset = 0f;
-        public static float binSpacing = 0.4f;
-        public static bool randomRot = false;
-        public static bool fromRight = false;
+        [XmlIgnore]
+        internal static float binXOffset = 0.4f;
+        [XmlIgnore]
+        internal static float binZOffset = 0f;
+        [XmlIgnore]
+        internal static float binSpacing = 0.4f;
+        [XmlIgnore]
+        internal static bool randomRot = false;
+        [XmlIgnore]
+        internal static bool fromRight = false;
 
-        // Internal references.
-        internal static string currentBinName;
-        internal static BinRecord currentBin;
-        internal static SortedList<string, BinRecord> binList;
-
-
-        // Provides a list of prop prefab names, cleaned up for UI display.
-        internal static string[] DisplayPropList => Array.ConvertAll(binList.Keys.ToArray(), propName => GetDisplayName(propName));
-
-
-        /// <summary>
-        /// Returns a random garbage bin prop from our list, NOT INCLUDING the vanilla garbage bin.
-        /// </summary>
-        /// <param name="seed">Seed for randomiser</param>
-        /// <returns>Random bin prop</returns>
-        internal static BinRecord GetRandomBin(Randomizer randomizer) => binList.Values[randomizer.Int32((uint)binList.Count - 2) + 1];
+        [XmlIgnore]
+        private static readonly string SettingsFileName = "GarbageBinManager.xml";
 
 
-        /// <summary>
-        /// Sets the current bin based on the name in currentBinName.
-        /// </summary>
-        internal static void SetCurrentBin()
+        // Global settings.
+        [XmlElement("Language")]
+        public string Language
         {
-            // Ensure a name is set and that it corresponds to a loaded bin.
-            if (currentBinName != null && binList.ContainsKey(currentBinName))
+            get
             {
-                currentBin = binList[currentBinName];
+                return Translations.Language;
+            }
+            set
+            {
+                Translations.Language = value;
+            }
+        }
+
+        // List of individual setting elements.
+        [XmlIgnore]
+        public List<GBRSettingElement> elementList = new List<GBRSettingElement>();
+
+        // Version.
+        [XmlAttribute("Version")]
+        public int version = 0;
+
+        // Configuration settings.
+        [XmlArray("Configurations")]
+        [XmlArrayItem("Configuration")]
+        public GBRSettingElement[] SettingElements
+        {
+            // Write to XML.
+            get
+            {
+                GBRSettingElement[] newElements = new GBRSettingElement[1];
+
+                newElements[0] = new GBRSettingElement()
+                {
+                    prefab = "global",
+                    hideBins = hideBins,
+                    propName = BinUtils.CurrentBinName,
+                    renderRange = renderRange,
+                    binThreshold = binThreshold,
+                    binCapacity = binCapacity,
+                    maxBins = maxBins,
+                    binXOffset = binXOffset,
+                    binZOffset = binZOffset,
+                    binSpacing = binSpacing,
+                    fromRight = fromRight,
+                    randomRot = randomRot
+                };
+
+                return newElements;
+            }
+
+            // Read from XML.
+            set
+            {
+                foreach (GBRSettingElement element in value)
+                {
+                    if (element.prefab == "global")
+                    {
+                        hideBins = element.hideBins;
+                        BinUtils.CurrentBinName = element.propName;
+                        renderRange = element.renderRange;
+                        binThreshold = element.binThreshold;
+                        binCapacity = element.binCapacity;
+                        maxBins = element.maxBins;
+                        binXOffset = element.binXOffset;
+                        binZOffset = element.binZOffset;
+                        binSpacing = element.binSpacing;
+                        fromRight = element.fromRight;
+                        randomRot = element.randomRot;
+                    }
+                }
             }
         }
 
 
         /// <summary>
-        /// Returns the name of a prefab cleaned up for display.
+        /// Load settings from XML file.
         /// </summary>
-        /// <param name="fullName">Raw prefab name</param>
-        /// <returns></returns>
-        private static string GetDisplayName(string fullName)
+        internal static void Load()
         {
-            // Filter out leading package number and trailing '_Data'.
-            return fullName.Substring(fullName.IndexOf('.') + 1).Replace("_Data", "");
+            try
+            {
+                // Check to see if configuration file exists.
+                if (File.Exists(SettingsFileName))
+                {
+                    // Read it.
+                    using (StreamReader reader = new StreamReader(SettingsFileName))
+                    {
+                        XmlSerializer xmlSerializer = new XmlSerializer(typeof(ModSettings));
+                        if (!(xmlSerializer.Deserialize(reader) is ModSettings))
+                        {
+                            Logging.Error("couldn't deserialize settings file");
+                        }
+                    }
+                }
+                else
+                {
+                    Logging.Message("no settings file found");
+                }
+            }
+            catch (Exception e)
+            {
+                Logging.LogException(e, "exception reading XML settings file");
+            }
+        }
+
+
+        /// <summary>
+        /// Save settings to XML file.
+        /// </summary>
+        internal static void Save()
+        {
+            try
+            {
+                // Pretty straightforward.  Serialisation is within GBRSettingsFile class.
+                using (StreamWriter writer = new StreamWriter(SettingsFileName))
+                {
+                    XmlSerializer xmlSerializer = new XmlSerializer(typeof(ModSettings));
+                    xmlSerializer.Serialize(writer, new ModSettings());
+                }
+            }
+            catch (Exception e)
+            {
+                Logging.LogException(e, "exception saving XML settings file");
+            }
         }
     }
 
 
     /// <summary>
-    /// Custom bin list.
+    /// Individual settings element.
     /// </summary>
-    internal static class CustomBins
+    public class GBRSettingElement
     {
-        internal static Dictionary<String,float> binList = new Dictionary<string, float>
-        {
-            { "1584085578.Trash bin 01_Data", 0f },
-            { "1584085578.Trash bin 02_Data", 0f },
-            { "1584085578.Trash bin 03_Data", 0f },
-            { "2023319576.Korea food waste bin(blue)_Data", (float)(-Math.PI / 2) },
-            { "2023319576.Korea food waste bin(green)_Data", (float)(-Math.PI / 2) },
-            { "2023319576.Korea food waste bin(orange)_Data", (float)(-Math.PI / 2) },
-            { "519417315.UK Wheelie Bin - Black_Data", 0f },
-            { "519417802.UK Wheelie Bin - Green_Data", 0f },
-            { "519417584.UK Wheelie Bin - Blue Lid_Data", 0f },
-            { "2055162053.dlx - Paper Bin_Data", 0f },
-            { "2055162053.dlx - Trash Bin_Data", 0f },
-            { "2055162053.dlx - Yellow Bin_Data", 0f }
-        };
-    }
+        [XmlAttribute("Prefab")]
+        public string prefab = string.Empty;
 
+        [XmlElement("HideBins")]
+        public bool hideBins = false;
 
-    /// <summary>
-    /// Class to hold info pertaining to a specific bin.
-    /// Class, because it is nullable and mutable, and Mutable Structs Are Evil.
-    /// </summary>
-    public class BinRecord
-    {
-        public PropInfo binProp;
-        public float rotation;
+        [XmlElement("PropName")]
+        public string propName = string.Empty;
+
+        [XmlElement("BinThreshold")]
+        public float binThreshold = 1000f;
+
+        [XmlElement("BinCapacity")]
+        public float binCapacity = 1000f;
+
+        [XmlElement("MaxBins")]
+        public int maxBins = 8;
+
+        [XmlElement("RenderRange")]
+        public float renderRange = 500f;
+
+        [XmlElement("OffsetX")]
+        public float binXOffset = 0.4f;
+
+        [XmlElement("OffsetZ")]
+        public float binZOffset = 0f;
+
+        [XmlElement("Spacing")]
+        public float binSpacing = 0.4f;
+
+        [XmlElement("FromRight")]
+        public bool fromRight = false;
+
+        [XmlElement("RandomRotation")]
+        public bool randomRot = false;
     }
 }

@@ -17,7 +17,7 @@ namespace GarbageBinManager
         public override void OnLevelLoaded(LoadMode mode)
         {
             // Initialise our list of valid bin replacement props with intial 'random' item..
-            ModSettings.binList = new SortedList<string, BinRecord>
+            BinUtils.binList = new SortedList<string, BinRecord>
             {
                 { "000." + Translations.Translate("GBM_PRP_RDM"), null }
             };
@@ -51,20 +51,20 @@ namespace GarbageBinManager
                     }
 
                     // Check to make sure we don't have a duplicate here.
-                    if (ModSettings.binList.ContainsKey(thisProp.name))
+                    if (BinUtils.binList.ContainsKey(thisProp.name))
                     {
                         Logging.Message("duplicate prop name ", thisProp.name);
                     }
                     else
                     {
                         // All good - add to list.
-                        ModSettings.binList.Add(thisProp.name, new BinRecord { binProp = thisProp, rotation = rotation });
+                        BinUtils.binList.Add(thisProp.name, new BinRecord { binProp = thisProp, rotation = rotation });
                     }
                 }
             }
 
             // Set current bin.
-            ModSettings.SetCurrentBin();
+            BinUtils.SetCurrentBin();
 
             // Set up options panel event handler (need to redo this now that options panel has been reset after loading into game).
             OptionsPanelManager.OptionsEventHook();

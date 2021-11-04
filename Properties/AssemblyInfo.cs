@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Garbage Bin Manager")]
-[assembly: AssemblyCopyright("Copyright ©  2020 algernon")]
+[assembly: AssemblyCopyright("Copyright ©  2020-21 algernon")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

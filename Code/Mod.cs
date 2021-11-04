@@ -40,7 +40,7 @@ namespace GarbageBinManager
             }
 
             // Load the settings file.
-            GBMSettingsFile.LoadSettings();
+            ModSettings.Load();
         }
 
 

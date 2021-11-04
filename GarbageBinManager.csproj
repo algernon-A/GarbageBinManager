@@ -60,10 +60,10 @@
     <Compile Include="Code\Mod.cs" />
     <Compile Include="Code\Patches\Patcher.cs" />
     <Compile Include="Code\Patches\RenderGarbageBins.cs" />
+    <Compile Include="Code\Settings\BinUtils.cs" />
     <Compile Include="Code\Settings\ModSettings.cs" />
     <Compile Include="Code\Settings\OptionsPanel.cs" />
     <Compile Include="Code\Settings\PanelUtils.cs" />
-    <Compile Include="Code\Settings\SettingsXML.cs" />
     <Compile Include="Code\TranslationFramework\TranslationFramework.cs" />
     <Compile Include="Code\TranslationFramework\TranslationXML.cs" />
     <Compile Include="Code\Utils\Logging.cs" />
