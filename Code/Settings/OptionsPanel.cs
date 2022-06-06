@@ -1,142 +1,22 @@
-﻿using System;
-using UnityEngine;
-using ICities;
+﻿using UnityEngine;
 using ColossalFramework.UI;
-using ColossalFramework.Globalization;
 
 
 namespace GarbageBinManager
 {
     /// <summary>
-    /// Class to handle the mod settings options panel.
-    /// </summary>
-    internal static class OptionsPanelManager
-    {
-        // Instance references.
-        private static GameObject uiGameObject;
-        private static GBMOptionsPanel _panel;
-        internal static GBMOptionsPanel Panel => _panel;
-
-        // Parent UI panel reference.
-        private static UIScrollablePanel optionsPanel;
-        private static UIPanel gameOptionsPanel;
-
-
-        /// <summary>
-        /// Options panel setup.
-        /// </summary>
-        /// <param name="helper">UIHelperBase parent</param>
-        internal static void Setup(UIHelperBase helper)
-        {
-            // Set up tab strip and containers.
-            optionsPanel = ((UIHelper)helper).self as UIScrollablePanel;
-            optionsPanel.autoLayout = false;
-        }
-
-
-        /// <summary>
-        /// Creates the panel object in-game and displays it.
-        /// </summary>
-        private static void Create()
-        {
-            try
-            {
-                // If no instance already set, create one.
-                if (uiGameObject == null)
-                {
-                    // Give it a unique name for easy finding with ModTools.
-                    uiGameObject = new GameObject("GBMOptionsPanel");
-                    uiGameObject.transform.parent = optionsPanel.transform;
-
-                    _panel = uiGameObject.AddComponent<GBMOptionsPanel>();
-
-                    // Set up and show panel.
-                    Panel.Setup(optionsPanel.width, optionsPanel.height);
-                }
-            }
-            catch (Exception e)
-            {
-                Logging.LogException(e, "exception creating options panel");
-            }
-        }
-
-
-        /// <summary>
-        /// Closes the panel by destroying the object (removing any ongoing UI overhead).
-        /// </summary>
-        private static void Close()
-        {
-            // Save settings first.
-            ModSettings.Save();
-
-            // Enforce C# garbage collection by setting to null.
-            if (_panel != null)
-            {
-                GameObject.Destroy(_panel);
-                _panel = null;
-            }
-
-            if (uiGameObject != null)
-            {
-                GameObject.Destroy(uiGameObject);
-                uiGameObject = null;
-            }
-        }
-
-
-        /// <summary>
-        /// Attaches an event hook to options panel visibility, to activate/deactivate our options panel as appropriate.
-        /// Deactivating when not visible saves UI overhead and performance impacts, especially with so many UITextFields.
-        /// </summary>
-        internal static void OptionsEventHook()
-        {
-            // Get options panel instance.
-            gameOptionsPanel = UIView.library.Get<UIPanel>("OptionsPanel");
-
-            if (gameOptionsPanel == null)
-            {
-                Logging.Error("couldn't find OptionsPanel");
-            }
-            else
-            {
-                // Simple event hook to enable/disable GameObject based on appropriate visibility.
-                gameOptionsPanel.eventVisibilityChanged += (control, isVisible) =>
-                {
-                    if (isVisible)
-                    {
-                        Create();
-                    }
-                    else
-                    {
-                        Close();
-                    }
-                };
-
-                // Recreate panel on system locale change.
-                LocaleManager.eventLocaleChanged += LocaleChanged;
-            }
-        }
-
-
-        /// <summary>
-        /// Refreshes the options panel (destroys and rebuilds) on a locale change when the options panel is open.
-        /// </summary>
-        public static void LocaleChanged()
-        {
-            if (gameOptionsPanel != null && gameOptionsPanel.isVisible)
-            {
-                Close();
-                Create();
-            }
-        }
-    }
-
-
-    /// <summary>
     /// Garbage Bin Manager options panel.
     /// </summary>
     public class GBMOptionsPanel : UIPanel
     {
+        // Layout constants.
+        private const float Margin = 5f;
+        private const float LeftMargin = 24f;
+        private const float CheckRowHeight = 22f;
+        private const float DoubleMargin = 10f;
+        private const float SliderHeight = 65f;
+        private const float DropDownHeight = 80f;
+
         // Panel components.
         private UIDropDown propSelection;
         private UILabel noPropLabel;
@@ -155,38 +35,48 @@ namespace GarbageBinManager
         /// <summary>
         /// Performs initial setup for the panel; we don't use Start() as that's not sufficiently reliable (race conditions), and is not needed with the dynamic create/destroy process.
         /// </summary>
-        internal void Setup(float width, float height)
+        internal void Setup()
         {
-            // Size and placement.
-            this.width = width - (this.relativePosition.x * 2);
-            this.height = height - (this.relativePosition.y * 2);
-            this.autoLayout = true;
-            this.autoLayoutDirection = LayoutDirection.Vertical;
+            // Basic setup.
+            autoLayout = false;
 
-            // Add controls.
+            // Y position indicator.
+            float currentY = Margin;
+
+            // Language selection.
+            UIDropDown languageDropDown = UIControls.AddPlainDropDown(this,LeftMargin, currentY, Translations.Translate("TRN_CHOICE"), Translations.LanguageList, Translations.Index);
+            languageDropDown.eventSelectedIndexChanged += (control, index) =>
+            {
+                Translations.Index = index;
+                OptionsPanelManager.LocaleChanged();
+            };
+            currentY += DropDownHeight;
+
+            // Spacer.
+            UIControls.OptionsSpacer(this, LeftMargin, currentY, this.width - (LeftMargin * 2f));
+            currentY += DoubleMargin;
+
             // Checkbox to hide all bins.
-            hideCheck = PanelUtils.AddPlainCheckBox(this, Translations.Translate("GBM_OPT_HIDE"));
+            hideCheck = UIControls.AddPlainCheckBox(this, Translations.Translate("GBM_OPT_HIDE"));
+            hideCheck.relativePosition = new Vector2(LeftMargin, currentY);
             hideCheck.isChecked = ModSettings.hideBins;
-            hideCheck.eventCheckChanged += (control, isChecked) => { ModSettings.hideBins = isChecked; UpdateVisibility();  };
-            PanelUtils.AddPanelSpacer(this);
+            hideCheck.eventCheckChanged += (control, isChecked) => { ModSettings.hideBins = isChecked; UpdateVisibility(); };
+            currentY += CheckRowHeight + Margin;
+
+            // Spacer.
+            UIControls.OptionsSpacer(this, LeftMargin, currentY, this.width - (LeftMargin * 2f));
+            currentY += DoubleMargin;
 
             // Prop selection.
             if (BinUtils.binList == null)
             {
                 // If the dictionary hasn't been initialised yet, then we're not in-game; display message instead.
-                noPropLabel = this.AddUIComponent<UILabel>();
-
-                noPropLabel.textScale = 1.2f;
-                noPropLabel.text = Translations.Translate("GBM_OPT_NOGAME");
-
-                // Add vertical spacing margin.
-                noPropLabel.autoSize = false;
-                noPropLabel.height += 30f;
+                noPropLabel = UIControls.AddLabel(this, LeftMargin, currentY + DoubleMargin, Translations.Translate("GBM_OPT_NOGAME"), textScale: 1.2f);
             }
             else
             {
                 // We have a dictionary (game has loaded); create dropdown, populate with our prop list, and add 'Random' to the end.
-                propSelection = PanelUtils.AddPlainDropDown(this, Translations.Translate("GBM_OPT_PROP"), BinUtils.DisplayPropList, BinUtils.binList.IndexOfValue(BinUtils.currentBin));
+                propSelection = UIControls.AddPlainDropDown(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_PROP"), BinUtils.DisplayPropList, BinUtils.binList.IndexOfValue(BinUtils.currentBin));
 
                 // Event handler.
                 propSelection.eventSelectedIndexChanged += (control, index) =>
@@ -194,35 +84,42 @@ namespace GarbageBinManager
                     BinUtils.currentBin = BinUtils.binList.Values[index];
                 };
             }
+            currentY += DropDownHeight;
 
             // Sliders for render range, spacing between bins, and forward offset of bins.
-            rangeSlider = PanelUtils.AddSliderWithValue(this, Translations.Translate("GBM_OPT_DIST"), 100f, 1000f, 10f, ModSettings.renderRange, (value) => { ModSettings.renderRange = value; });
-            thresholdSlider = PanelUtils.AddSliderWithValue(this, Translations.Translate("GBM_OPT_THLD"), 0f, 2000f, 100f, ModSettings.binThreshold, (value) => { ModSettings.binThreshold = value; });
-            capacitySlider = PanelUtils.AddSliderWithValue(this, Translations.Translate("GBM_OPT_CAP"), 100f, 2000f, 100f, ModSettings.binCapacity, (value) => { ModSettings.binCapacity = value; });
-            maxSlider = PanelUtils.AddSliderWithValue(this, Translations.Translate("GBM_OPT_MAX"), 1f, 50, 1f, ModSettings.maxBins, (value) => { ModSettings.maxBins = (int)value; });
-            xPosSlider = PanelUtils.AddSliderWithValue(this, Translations.Translate("GBM_OPT_XPOS"), 0f, 6f, 0.1f, ModSettings.binXOffset, (value) => { ModSettings.binXOffset = value; });
-            zPosSlider = PanelUtils.AddSliderWithValue(this, Translations.Translate("GBM_OPT_ZPOS"), 0f, 6f, 0.1f, ModSettings.binZOffset, (value) => { ModSettings.binZOffset = value; });
-            spaceSlider = PanelUtils.AddSliderWithValue(this, Translations.Translate("GBM_OPT_SPAC"), 0.4f, 4f, 0.1f, ModSettings.binSpacing, (value) => { ModSettings.binSpacing = value; });
+            rangeSlider = UIControls.AddSliderWithValue(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_DIST"), 100f, 1000f, 10f, ModSettings.renderRange, (value) => { ModSettings.renderRange = value; });
+            currentY += SliderHeight;
+
+            thresholdSlider = UIControls.AddSliderWithValue(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_THLD"), 0f, 2000f, 100f, ModSettings.binThreshold, (value) => { ModSettings.binThreshold = value; });
+            currentY += SliderHeight + (thresholdSlider.relativePosition.y - 28f);
+
+            capacitySlider = UIControls.AddSliderWithValue(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_CAP"), 100f, 2000f, 100f, ModSettings.binCapacity, (value) => { ModSettings.binCapacity = value; });
+            currentY += SliderHeight + (capacitySlider.relativePosition.y - 28f);
+
+            maxSlider = UIControls.AddSliderWithValue(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_MAX"), 1f, 50, 1f, ModSettings.maxBins, (value) => { ModSettings.maxBins = (int)value; });
+            currentY += SliderHeight;
+
+            xPosSlider = UIControls.AddSliderWithValue(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_XPOS"), 0f, 6f, 0.1f, ModSettings.binXOffset, (value) => { ModSettings.binXOffset = value; });
+            currentY += SliderHeight;
+
+            zPosSlider = UIControls.AddSliderWithValue(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_ZPOS"), 0f, 6f, 0.1f, ModSettings.binZOffset, (value) => { ModSettings.binZOffset = value; });
+            currentY += SliderHeight;
+
+            spaceSlider = UIControls.AddSliderWithValue(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_SPAC"), 0.4f, 4f, 0.1f, ModSettings.binSpacing, (value) => { ModSettings.binSpacing = value; });
+            currentY += SliderHeight;
 
             // Random rotation checkbox.
-            rotationCheck = PanelUtils.AddPlainCheckBox(this, Translations.Translate("GBM_OPT_ROT"));
+            rotationCheck = UIControls.AddPlainCheckBox(this, Translations.Translate("GBM_OPT_ROT"));
+            rotationCheck.relativePosition = new Vector2(LeftMargin, currentY);
             rotationCheck.isChecked = ModSettings.randomRot;
             rotationCheck.eventCheckChanged += (control, isChecked) => { ModSettings.randomRot = isChecked; };
+            currentY += CheckRowHeight;
 
             // Put out bins from right corner instead of left.
-            fromRightCheck = PanelUtils.AddPlainCheckBox(this, Translations.Translate("GBM_OPT_RIGHT"));
+            fromRightCheck = UIControls.AddPlainCheckBox(this, Translations.Translate("GBM_OPT_RIGHT"));
+            fromRightCheck.relativePosition = new Vector2(LeftMargin, currentY);
             fromRightCheck.isChecked = ModSettings.fromRight;
             fromRightCheck.eventCheckChanged += (control, isChecked) => { ModSettings.fromRight = isChecked; };
-
-            // Language dropdown.
-            PanelUtils.AddPanelSpacer(this);
-            UIDropDown translationDropDown = PanelUtils.AddPlainDropDown(this, Translations.Translate("TRN_CHOICE"), Translations.LanguageList, Translations.Index);
-
-            // Event handler.
-            translationDropDown.eventSelectedIndexChanged += (control, index) =>
-            {
-                Translations.Index = index;
-            };
 
             // Update visibility.
             UpdateVisibility();
