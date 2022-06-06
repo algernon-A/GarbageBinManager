@@ -11,7 +11,7 @@ namespace GarbageBinManager
     public class GBMMod : IUserMod
     {
         public static string ModName => "Garbage Bin Manager";
-        public static string Version => "0.3";
+        public static string Version => "1.0";
 
         public string Name => ModName + " " + Version;
         public string Description => Translations.Translate("GBM_DESC");

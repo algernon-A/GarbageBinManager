@@ -1,4 +1,6 @@
-﻿- Overhal options panel code
+﻿Version 1.0 -
+
+- Overhal options panel code
 - Update CitiesHarmony API to 2.1.0.
 
 
