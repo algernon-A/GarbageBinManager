@@ -1,4 +1,7 @@
-﻿Version 0.3 -
+﻿- Update CitiesHarmony API to 2.1.0.
+
+
+Version 0.3 -
 
 - Add option to hide all garbage bins
 
