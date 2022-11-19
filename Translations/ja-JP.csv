@@ -1,0 +1,15 @@
+LANGUAGE,日本語
+GBM_DESC,開発中: バニラのゴミ箱を置き換えて、カスタマイズして設置が可能
+GBM_OPT_HIDE,全てのゴミ箱を非表示
+GBM_OPT_PROP,ゴミ箱Propを選択
+GBM_OPT_DIST,ゴミ箱を描画する最大距離(m)
+GBM_OPT_THLD,建物のゴミが増加したら、ゴミ箱を表示(デフォルト:1000)
+GBM_OPT_CAP,ゴミ箱の増加前に、ゴミ箱ごとに入る量(デフォルト:1000)
+GBM_OPT_MAX,建物に設置される、ゴミ箱の最大数(デフォルト:8個)
+GBM_OPT_XPOS,建物端の境界からの設置距離(m)
+GBM_OPT_ZPOS,ゴミ箱の道路側へ移動するオフセット(m)
+GBM_OPT_SPAC,ゴミ箱を空ける平均間隔(m)
+GBM_OPT_ROT,ゴミ箱をランダムに回転
+GBM_OPT_RIGHT,建物左側でなく、右側からゴミ箱を設置
+GBM_OPT_NOGAME,ゲーム内でゴミ箱Propを選択してください
+GBM_PRP_RDM,ランダム

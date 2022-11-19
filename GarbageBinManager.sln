@@ -5,6 +5,8 @@ VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GarbageBinManager", "GarbageBinManager.csproj", "{A2A41E35-B9A1-4B65-8E1D-62985F861446}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AlgernonCommonsPatchingShared", "..\AlgernonCommons\AlgernonCommonsPatchingShared.shproj", "{25AEF446-6F0D-43A8-BB84-D1306789B68C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,7 @@ Global
 		SolutionGuid = {C1F4F461-E986-463F-91C3-675385D4F2FA}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		..\AlgernonCommons\AlgernonCommonsShared.projitems*{a2a41e35-b9a1-4b65-8e1d-62985f861446}*SharedItemsImports = 5
+		..\AlgernonCommons\AlgernonCommonsPatchingShared.projitems*{25aef446-6f0d-43a8-bb84-d1306789b68c}*SharedItemsImports = 13
+		..\AlgernonCommons\AlgernonCommonsPatchingShared.projitems*{a2a41e35-b9a1-4b65-8e1d-62985f861446}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

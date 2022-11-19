@@ -1,15 +1,19 @@
-﻿using UnityEngine;
-using ColossalFramework.Math;
-using HarmonyLib;
-using System;
-
+﻿// <copyright file="RenderGarbageBins.cs" company="algernon (K. Algernon A. Sheppard)">
+// Copyright (c) algernon (K. Algernon A. Sheppard). All rights reserved.
+// Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
+// </copyright>
 
 namespace GarbageBinManager
 {
-	/// <summary>
-	/// Harmony PRefix patch to replace garbage bins.
-	/// </summary>
-	[HarmonyPatch(typeof(CommonBuildingAI))]
+    using UnityEngine;
+    using ColossalFramework.Math;
+    using HarmonyLib;
+    using System;
+
+    /// <summary>
+    /// Harmony PRefix patch to replace garbage bins.
+    /// </summary>
+    [HarmonyPatch(typeof(CommonBuildingAI))]
 	[HarmonyPatch("RenderGarbageBins")]
 	class BuildingUpgradedPatch
 	{
@@ -23,7 +27,7 @@ namespace GarbageBinManager
 		/// <param name="instance">RenderManager instance</param>
 		public static bool Prefix(RenderManager.CameraInfo cameraInfo, ushort buildingID, ref Building data, int layerMask, ref RenderManager.Instance instance)
 		{
-			// Don't do anything if building's garbage buffer is below set threshold (vanilla threshold: 1,000), or if hide all bins is checked..
+			// Don't do anything if building's garbage buffer is below set threshold (vanilla threshold: 1,000), or if hide all bins is checked.
 			if (ModSettings.hideBins || data.m_garbageBuffer < ModSettings.binThreshold)
 			{
 				// Don't continue on to original method.

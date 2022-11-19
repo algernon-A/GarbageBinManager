@@ -1,0 +1,15 @@
+LANGUAGE,正體中文
+GBM_DESC,持續開發中： 替換遊戲默認垃圾桶為玩家自製
+GBM_OPT_HIDE,隱藏所有垃圾桶
+GBM_OPT_PROP,垃圾桶
+GBM_OPT_DIST,渲染垃圾桶最大距離(米)
+GBM_OPT_THLD,建築達到一定垃圾積量則顯示垃圾桶(遊戲默認：1000)
+GBM_OPT_CAP,每個垃圾桶的垃圾容量(在添加其他垃圾桶前 - 遊戲默認：1000)
+GBM_OPT_MAX,每棟建築最大垃圾桶數量(遊戲默認：8)
+GBM_OPT_XPOS,距離邊界的起始距離(米)
+GBM_OPT_ZPOS,垃圾桶向街道的向前偏移(米)
+GBM_OPT_SPAC,垃圾桶之間的平均間隔(米)
+GBM_OPT_ROT,隨機旋轉垃圾桶
+GBM_OPT_RIGHT,從建築的右側放置垃圾桶(而不是左側)
+GBM_OPT_NOGAME,在遊戲中選擇垃圾桶道具
+GBM_PRP_RDM,隨機

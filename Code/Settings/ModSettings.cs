@@ -1,16 +1,22 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Xml.Serialization;
-
+﻿// <copyright file="ModSettings.cs" company="algernon (K. Algernon A. Sheppard)">
+// Copyright (c) algernon (K. Algernon A. Sheppard). All rights reserved.
+// Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
+// </copyright>
 
 namespace GarbageBinManager
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Xml.Serialization;
+    using AlgernonCommons;
+    using AlgernonCommons.XML;
+
     /// <summary>
     /// Class to hold global mod settings.
     /// </summary>
     [XmlRoot(ElementName = "GarbageBinRemover", Namespace = "")]
-    public class ModSettings
+    public class ModSettings : SettingsXMLBase
     {
         // Main toggle.
         [XmlIgnore]
@@ -40,21 +46,6 @@ namespace GarbageBinManager
 
         [XmlIgnore]
         private static readonly string SettingsFileName = "GarbageBinManager.xml";
-
-
-        // Global settings.
-        [XmlElement("Language")]
-        public string Language
-        {
-            get
-            {
-                return Translations.Language;
-            }
-            set
-            {
-                Translations.Language = value;
-            }
-        }
 
         // List of individual setting elements.
         [XmlIgnore]
