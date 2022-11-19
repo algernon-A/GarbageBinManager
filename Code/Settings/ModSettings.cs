@@ -18,44 +18,18 @@ namespace GarbageBinManager
     [XmlRoot(ElementName = "GarbageBinRemover", Namespace = "")]
     public class ModSettings : SettingsXMLBase
     {
-        // Main toggle.
-        [XmlIgnore]
-        internal static bool hideBins = false;
-
-        // Defaults from game.
-        [XmlIgnore]
-        internal static float renderRange = 500f;
-        [XmlIgnore]
-        internal static float binThreshold = 1000f;
-        [XmlIgnore]
-        internal static float binCapacity = 1000f;
-        [XmlIgnore]
-        internal static int maxBins = 8;
-
-        // Reasonable defaults to work with to suit Arnold J. Rimmer, Bsc. Ssc.'s bins.
-        [XmlIgnore]
-        internal static float binXOffset = 0.4f;
-        [XmlIgnore]
-        internal static float binZOffset = 0f;
-        [XmlIgnore]
-        internal static float binSpacing = 0.4f;
-        [XmlIgnore]
-        internal static bool randomRot = false;
-        [XmlIgnore]
-        internal static bool fromRight = false;
-
         [XmlIgnore]
         private static readonly string SettingsFileName = "GarbageBinManager.xml";
 
-        // List of individual setting elements.
-        [XmlIgnore]
-        public List<GBRSettingElement> elementList = new List<GBRSettingElement>();
-
-        // Version.
+        /// <summary>
+        /// Gets or sets the configuration file version.
+        /// </summary>
         [XmlAttribute("Version")]
-        public int version = 0;
+        public int Version { get; set; } = 0;
 
-        // Configuration settings.
+        /// <summary>
+        /// Gets or sets the configuration elements.
+        /// </summary>
         [XmlArray("Configurations")]
         [XmlArrayItem("Configuration")]
         public GBRSettingElement[] SettingElements
@@ -67,18 +41,18 @@ namespace GarbageBinManager
 
                 newElements[0] = new GBRSettingElement()
                 {
-                    prefab = "global",
-                    hideBins = hideBins,
-                    propName = BinUtils.CurrentBinName,
-                    renderRange = renderRange,
-                    binThreshold = binThreshold,
-                    binCapacity = binCapacity,
-                    maxBins = maxBins,
-                    binXOffset = binXOffset,
-                    binZOffset = binZOffset,
-                    binSpacing = binSpacing,
-                    fromRight = fromRight,
-                    randomRot = randomRot
+                    Building = "global",
+                    HideBins = RenderGarbageBins.HideBins,
+                    PropName = BinUtils.CurrentBinName,
+                    RenderRange = RenderGarbageBins.RenderRange,
+                    BinThreshold = RenderGarbageBins.BinThreshold,
+                    BinCapacity = RenderGarbageBins.BinCapacity,
+                    MaxBins = RenderGarbageBins.MaxBins,
+                    BinXOffset = RenderGarbageBins.BinXOffset,
+                    BinZOffset = RenderGarbageBins.BinZOffset,
+                    BinSpacing = RenderGarbageBins.BinSpacing,
+                    FromRight = RenderGarbageBins.FromRight,
+                    RandomRotation = RenderGarbageBins.RandomRotation,
                 };
 
                 return newElements;
@@ -89,24 +63,23 @@ namespace GarbageBinManager
             {
                 foreach (GBRSettingElement element in value)
                 {
-                    if (element.prefab == "global")
+                    if (element.Building == "global")
                     {
-                        hideBins = element.hideBins;
-                        BinUtils.CurrentBinName = element.propName;
-                        renderRange = element.renderRange;
-                        binThreshold = element.binThreshold;
-                        binCapacity = element.binCapacity;
-                        maxBins = element.maxBins;
-                        binXOffset = element.binXOffset;
-                        binZOffset = element.binZOffset;
-                        binSpacing = element.binSpacing;
-                        fromRight = element.fromRight;
-                        randomRot = element.randomRot;
+                        RenderGarbageBins.HideBins = element.HideBins;
+                        BinUtils.CurrentBinName = element.PropName;
+                        RenderGarbageBins.RenderRange = element.RenderRange;
+                        RenderGarbageBins.BinThreshold = element.BinThreshold;
+                        RenderGarbageBins.BinCapacity = element.BinCapacity;
+                        RenderGarbageBins.MaxBins = element.MaxBins;
+                        RenderGarbageBins.BinXOffset = element.BinXOffset;
+                        RenderGarbageBins.BinZOffset = element.BinZOffset;
+                        RenderGarbageBins.BinSpacing = element.BinSpacing;
+                        RenderGarbageBins.FromRight = element.FromRight;
+                        RenderGarbageBins.RandomRotation = element.RandomRotation;
                     }
                 }
             }
         }
-
 
         /// <summary>
         /// Load settings from XML file.
@@ -139,7 +112,6 @@ namespace GarbageBinManager
             }
         }
 
-
         /// <summary>
         /// Save settings to XML file.
         /// </summary>
@@ -159,48 +131,83 @@ namespace GarbageBinManager
                 Logging.LogException(e, "exception saving XML settings file");
             }
         }
-    }
 
+        /// <summary>
+        /// Individual settings element.
+        /// </summary>
+        public class GBRSettingElement
+        {
+            /// <summary>
+            /// Gets or sets the selected target building prefab name.
+            /// </summary>
+            [XmlAttribute("Prefab")]
+            public string Building { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Individual settings element.
-    /// </summary>
-    public class GBRSettingElement
-    {
-        [XmlAttribute("Prefab")]
-        public string prefab = string.Empty;
+            /// <summary>
+            /// Gets or sets a value indicating whether bins should be hidden.
+            /// </summary>
+            [XmlElement("HideBins")]
+            public bool HideBins { get; set; } = false;
 
-        [XmlElement("HideBins")]
-        public bool hideBins = false;
+            /// <summary>
+            /// Gets or sets the selected bin prefab name.
+            /// </summary>
+            [XmlElement("PropName")]
+            public string PropName { get; set; } = string.Empty;
 
-        [XmlElement("PropName")]
-        public string propName = string.Empty;
+            /// <summary>
+            /// Gets or sets the minimum garbage threshold at which bins will be displayed.
+            /// </summary>
+            [XmlElement("BinThreshold")]
+            public float BinThreshold { get; set; } = 1000f;
 
-        [XmlElement("BinThreshold")]
-        public float binThreshold = 1000f;
+            /// <summary>
+            /// Gets or sets the maximum garbage capacity per bin (when this is full, a new bin will be put out).
+            /// </summary>
+            [XmlElement("BinCapacity")]
+            public float BinCapacity { get; set; } = 1000f;
 
-        [XmlElement("BinCapacity")]
-        public float binCapacity = 1000f;
+            /// <summary>
+            /// Gets or sets the maximum number of garbage bins.
+            /// </summary>
+            [XmlElement("MaxBins")]
+            public int MaxBins { get; set; } = 8;
 
-        [XmlElement("MaxBins")]
-        public int maxBins = 8;
+            /// <summary>
+            /// Gets or sets the maximum render range for generated bins.
+            /// </summary>
+            [XmlElement("RenderRange")]
+            public float RenderRange { get; set; } = 500f;
 
-        [XmlElement("RenderRange")]
-        public float renderRange = 500f;
+            /// <summary>
+            /// Gets or sets the bin starting position X-offset.
+            /// </summary>
+            [XmlElement("OffsetX")]
+            public float BinXOffset { get; set; } = 0.4f;
 
-        [XmlElement("OffsetX")]
-        public float binXOffset = 0.4f;
+            /// <summary>
+            /// Gets or sets the bin starting position Z-offset.
+            /// </summary>
+            [XmlElement("OffsetZ")]
+            public float BinZOffset { get; set; } = 0f;
 
-        [XmlElement("OffsetZ")]
-        public float binZOffset = 0f;
+            /// <summary>
+            /// Gets or sets the spacing between bins.
+            /// </summary>
+            [XmlElement("Spacing")]
+            public float BinSpacing { get; set; } = 0.4f;
 
-        [XmlElement("Spacing")]
-        public float binSpacing = 0.4f;
+            /// <summary>
+            /// Gets or sets a value indicating whether bins should be put out from the right-hand side of the property, instead of the left (facing the property).
+            /// </summary>
+            [XmlElement("FromRight")]
+            public bool FromRight { get; set; } = false;
 
-        [XmlElement("FromRight")]
-        public bool fromRight = false;
-
-        [XmlElement("RandomRotation")]
-        public bool randomRot = false;
+            /// <summary>
+            /// Gets or sets a value indicating whether bin rotations should be random (as opposed to all facing in the same direction).
+            /// </summary>
+            [XmlElement("RandomRotation")]
+            public bool RandomRotation { get; set; } = false;
+        }
     }
 }

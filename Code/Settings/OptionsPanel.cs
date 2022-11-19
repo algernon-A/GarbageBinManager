@@ -38,7 +38,7 @@ namespace GarbageBinManager
         private readonly UICheckBox _hideCheck;
 
         /// <summary>
-        /// Performs initial setup for the panel; we don't use Start() as that's not sufficiently reliable (race conditions), and is not needed with the dynamic create/destroy process.
+        /// Initializes a new instance of the <see cref="OptionsPanel"/> class.
         /// </summary>
         public OptionsPanel()
         {
@@ -49,7 +49,7 @@ namespace GarbageBinManager
             float currentY = Margin;
 
             // Language selection.
-            UIDropDown languageDropDown = UIDropDowns.AddPlainDropDown(this,LeftMargin, currentY, Translations.Translate("LANGUAGE_CHOICE"), Translations.LanguageList, Translations.Index);
+            UIDropDown languageDropDown = UIDropDowns.AddPlainDropDown(this, LeftMargin, currentY, Translations.Translate("LANGUAGE_CHOICE"), Translations.LanguageList, Translations.Index);
             languageDropDown.eventSelectedIndexChanged += (control, index) =>
             {
                 Translations.Index = index;
@@ -64,8 +64,12 @@ namespace GarbageBinManager
             // Checkbox to hide all bins.
             _hideCheck = UICheckBoxes.AddPlainCheckBox(this, Translations.Translate("GBM_OPT_HIDE"));
             _hideCheck.relativePosition = new Vector2(LeftMargin, currentY);
-            _hideCheck.isChecked = ModSettings.hideBins;
-            _hideCheck.eventCheckChanged += (control, isChecked) => { ModSettings.hideBins = isChecked; UpdateVisibility(); };
+            _hideCheck.isChecked = RenderGarbageBins.HideBins;
+            _hideCheck.eventCheckChanged += (control, isChecked) =>
+            {
+                RenderGarbageBins.HideBins = isChecked;
+                UpdateVisibility();
+            };
             currentY += CheckRowHeight + Margin;
 
             // Spacer.
@@ -73,7 +77,7 @@ namespace GarbageBinManager
             currentY += DoubleMargin;
 
             // Prop selection.
-            if (BinUtils.binList == null)
+            if (BinUtils.BinList == null)
             {
                 // If the dictionary hasn't been initialised yet, then we're not in-game; display message instead.
                 _noPropLabel = UILabels.AddLabel(this, LeftMargin, currentY + DoubleMargin, Translations.Translate("GBM_OPT_NOGAME"), textScale: 1.2f);
@@ -81,62 +85,62 @@ namespace GarbageBinManager
             else
             {
                 // We have a dictionary (game has loaded); create dropdown, populate with our prop list, and add 'Random' to the end.
-                _propSelection = UIDropDowns.AddPlainDropDown(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_PROP"), BinUtils.DisplayPropList, BinUtils.binList.IndexOfValue(BinUtils.currentBin));
+                _propSelection = UIDropDowns.AddPlainDropDown(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_PROP"), BinUtils.DisplayPropList, BinUtils.BinList.IndexOfValue(BinUtils.CurrentBin));
 
                 // Event handler.
                 _propSelection.eventSelectedIndexChanged += (control, index) =>
                 {
-                    BinUtils.currentBin = BinUtils.binList.Values[index];
+                    BinUtils.CurrentBin = BinUtils.BinList.Values[index];
                 };
             }
+
             currentY += DropDownHeight;
 
             // Sliders for render range, spacing between bins, and forward offset of bins.
-            _rangeSlider = UISliders.AddPlainSliderWithValue(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_DIST"), 100f, 1000f, 10f, ModSettings.renderRange);
-            _rangeSlider.eventValueChanged += (c, value) => { ModSettings.renderRange = value; };
+            _rangeSlider = UISliders.AddPlainSliderWithValue(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_DIST"), 100f, 1000f, 10f, RenderGarbageBins.RenderRange);
+            _rangeSlider.eventValueChanged += (c, value) => { RenderGarbageBins.RenderRange = value; };
             currentY += SliderHeight;
 
-            _thresholdSlider = UISliders.AddPlainSliderWithValue(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_THLD"), 0f, 2000f, 100f, ModSettings.binThreshold);
-            _thresholdSlider.eventValueChanged += (c, value) => { ModSettings.binThreshold = value; };
+            _thresholdSlider = UISliders.AddPlainSliderWithValue(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_THLD"), 0f, 2000f, 100f, RenderGarbageBins.BinThreshold);
+            _thresholdSlider.eventValueChanged += (c, value) => { RenderGarbageBins.BinThreshold = value; };
             currentY += SliderHeight + (_thresholdSlider.relativePosition.y - 28f);
 
-            _capacitySlider = UISliders.AddPlainSliderWithValue(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_CAP"), 100f, 2000f, 100f, ModSettings.binCapacity);
-            _capacitySlider.eventValueChanged += (c, value) => { ModSettings.binCapacity = value; };
+            _capacitySlider = UISliders.AddPlainSliderWithValue(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_CAP"), 100f, 2000f, 100f, RenderGarbageBins.BinCapacity);
+            _capacitySlider.eventValueChanged += (c, value) => { RenderGarbageBins.BinCapacity = value; };
             currentY += SliderHeight + (_capacitySlider.relativePosition.y - 28f);
 
-            _maxSlider = UISliders.AddPlainSliderWithValue(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_MAX"), 1f, 50, 1f, ModSettings.maxBins);
-            _maxSlider.eventValueChanged += (c, value) => { ModSettings.maxBins = (int)value; };
+            _maxSlider = UISliders.AddPlainSliderWithValue(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_MAX"), 1f, 50, 1f, RenderGarbageBins.MaxBins);
+            _maxSlider.eventValueChanged += (c, value) => { RenderGarbageBins.MaxBins = (int)value; };
             currentY += SliderHeight;
 
-            _xPosSlider = UISliders.AddPlainSliderWithValue(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_XPOS"), 0f, 6f, 0.1f, ModSettings.binXOffset);
-            _xPosSlider.eventValueChanged += (c, value) => { ModSettings.binXOffset = value; };
+            _xPosSlider = UISliders.AddPlainSliderWithValue(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_XPOS"), 0f, 6f, 0.1f, RenderGarbageBins.BinXOffset);
+            _xPosSlider.eventValueChanged += (c, value) => { RenderGarbageBins.BinXOffset = value; };
             currentY += SliderHeight;
 
-            _zPosSlider = UISliders.AddPlainSliderWithValue(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_ZPOS"), 0f, 6f, 0.1f, ModSettings.binZOffset);
-            _zPosSlider.eventValueChanged += (c, value) => { ModSettings.binZOffset = value; };
+            _zPosSlider = UISliders.AddPlainSliderWithValue(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_ZPOS"), 0f, 6f, 0.1f, RenderGarbageBins.BinZOffset);
+            _zPosSlider.eventValueChanged += (c, value) => { RenderGarbageBins.BinZOffset = value; };
             currentY += SliderHeight;
 
-            _spaceSlider = UISliders.AddPlainSliderWithValue(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_SPAC"), 0.4f, 4f, 0.1f, ModSettings.binSpacing);
-            _spaceSlider.eventValueChanged += (c, value) => { ModSettings.binSpacing = value; };
+            _spaceSlider = UISliders.AddPlainSliderWithValue(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_SPAC"), 0.4f, 4f, 0.1f, RenderGarbageBins.BinSpacing);
+            _spaceSlider.eventValueChanged += (c, value) => { RenderGarbageBins.BinSpacing = value; };
             currentY += SliderHeight;
 
             // Random rotation checkbox.
             _rotationCheck = UICheckBoxes.AddPlainCheckBox(this, Translations.Translate("GBM_OPT_ROT"));
             _rotationCheck.relativePosition = new Vector2(LeftMargin, currentY);
-            _rotationCheck.isChecked = ModSettings.randomRot;
-            _rotationCheck.eventCheckChanged += (control, isChecked) => { ModSettings.randomRot = isChecked; };
+            _rotationCheck.isChecked = RenderGarbageBins.RandomRotation;
+            _rotationCheck.eventCheckChanged += (control, isChecked) => { RenderGarbageBins.RandomRotation = isChecked; };
             currentY += CheckRowHeight;
 
             // Put out bins from right corner instead of left.
             _fromRightCheck = UICheckBoxes.AddPlainCheckBox(this, Translations.Translate("GBM_OPT_RIGHT"));
             _fromRightCheck.relativePosition = new Vector2(LeftMargin, currentY);
-            _fromRightCheck.isChecked = ModSettings.fromRight;
-            _fromRightCheck.eventCheckChanged += (control, isChecked) => { ModSettings.fromRight = isChecked; };
+            _fromRightCheck.isChecked = RenderGarbageBins.FromRight;
+            _fromRightCheck.eventCheckChanged += (control, isChecked) => { RenderGarbageBins.FromRight = isChecked; };
 
             // Update visibility.
             UpdateVisibility();
         }
-
 
         /// <summary>
         /// Shows or hides controls based on state of 'hide bins' checkbox.
@@ -162,6 +166,7 @@ namespace GarbageBinManager
             {
                 _noPropLabel.isVisible = shown;
             }
+
             if (_propSelection != null)
             {
                 _propSelection.parent.isVisible = shown;
