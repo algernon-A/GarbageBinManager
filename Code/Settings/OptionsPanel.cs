@@ -85,7 +85,7 @@ namespace GarbageBinManager
             else
             {
                 // We have a dictionary (game has loaded); create dropdown, populate with our prop list, and add 'Random' to the end.
-                _propSelection = UIDropDowns.AddPlainDropDown(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_PROP"), BinUtils.DisplayPropList, BinUtils.BinList.IndexOfValue(BinUtils.CurrentBin));
+                _propSelection = UIDropDowns.AddPlainDropDown(this, LeftMargin, currentY, Translations.Translate("GBM_OPT_PROP"), BinUtils.DisplayPropList, BinUtils.BinList.IndexOfValue(BinUtils.CurrentBin), 400f);
 
                 // Event handler.
                 _propSelection.eventSelectedIndexChanged += (control, index) =>
