@@ -1,5 +1,5 @@
 LANGUAGE,日本語
-GBM_DESC,開発中: バニラのゴミ箱を置き換えて、カスタマイズして設置が可能
+GBM_DESC,バニラのゴミ箱を置き換えて、カスタマイズして設置が可能
 GBM_OPT_HIDE,全てのゴミ箱を非表示
 GBM_OPT_PROP,ゴミ箱Propを選択
 GBM_OPT_DIST,ゴミ箱を描画する最大距離(m)

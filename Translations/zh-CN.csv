@@ -1,5 +1,5 @@
 LANGUAGE,简体中文
-GBM_DESC,正在开发中:取代普通垃圾桶，并支持自定义放置。
+GBM_DESC,取代普通垃圾桶，并支持自定义放置。
 GBM_OPT_HIDE,隐藏所有垃圾桶
 GBM_OPT_PROP,垃圾桶
 GBM_OPT_DIST,最大渲染垃圾桶距离(m)

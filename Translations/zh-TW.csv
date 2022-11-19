@@ -1,5 +1,5 @@
 LANGUAGE,正體中文
-GBM_DESC,持續開發中： 替換遊戲默認垃圾桶為玩家自製
+GBM_DESC,替換遊戲默認垃圾桶為玩家自製
 GBM_OPT_HIDE,隱藏所有垃圾桶
 GBM_OPT_PROP,垃圾桶
 GBM_OPT_DIST,渲染垃圾桶最大距離(米)
