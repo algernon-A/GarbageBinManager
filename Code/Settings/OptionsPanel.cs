@@ -13,7 +13,7 @@ namespace GarbageBinManager
     /// <summary>
     /// Garbage Bin Manager options panel.
     /// </summary>
-    public class OptionsPanel : UIPanel
+    public class OptionsPanel : OptionsPanelBase
     {
         // Layout constants.
         private const float Margin = 5f;
@@ -24,23 +24,23 @@ namespace GarbageBinManager
         private const float DropDownHeight = 80f;
 
         // Panel components.
-        private readonly UIDropDown _propSelection;
-        private readonly UILabel _noPropLabel;
-        private readonly UISlider _rangeSlider;
-        private readonly UISlider _thresholdSlider;
-        private readonly UISlider _capacitySlider;
-        private readonly UISlider _maxSlider;
-        private readonly UISlider _xPosSlider;
-        private readonly UISlider _zPosSlider;
-        private readonly UISlider _spaceSlider;
-        private readonly UICheckBox _rotationCheck;
-        private readonly UICheckBox _fromRightCheck;
-        private readonly UICheckBox _hideCheck;
+        private UIDropDown _propSelection;
+        private UILabel _noPropLabel;
+        private UISlider _rangeSlider;
+        private UISlider _thresholdSlider;
+        private UISlider _capacitySlider;
+        private UISlider _maxSlider;
+        private UISlider _xPosSlider;
+        private UISlider _zPosSlider;
+        private UISlider _spaceSlider;
+        private UICheckBox _rotationCheck;
+        private UICheckBox _fromRightCheck;
+        private UICheckBox _hideCheck;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OptionsPanel"/> class.
+        /// Performs on-demand panel setup.
         /// </summary>
-        public OptionsPanel()
+        protected override void Setup()
         {
             // Basic setup.
             autoLayout = false;
