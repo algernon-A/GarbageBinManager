@@ -1,4 +1,6 @@
-﻿- Fix incorrect mapping of BinThreshold backing field
+﻿Version 1.1.1 -
+
+- Fix incorrect mapping of BinThreshold backing field
 - Update AlgernonCommons
 - Update CitiesHarmony API to 2.2.0
 
