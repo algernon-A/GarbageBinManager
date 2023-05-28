@@ -1,4 +1,5 @@
-﻿- Update AlgernonCommons
+﻿- Fix incorrect mapping of BinThreshold backing field
+- Update AlgernonCommons
 - Update CitiesHarmony API to 2.2.0
 
 

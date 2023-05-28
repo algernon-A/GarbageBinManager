@@ -46,7 +46,7 @@ namespace GarbageBinManager
         /// </summary>
         internal static float BinThreshold
         {
-            get => s_renderRange; set => s_binThreshold = value;
+            get => s_binThreshold; set => s_binThreshold = value;
         }
 
         /// <summary>
